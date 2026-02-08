@@ -3,115 +3,141 @@ ID: HM-AST-007
 Status: ACTIVE
 Role: CAD Assembly Manifest
 Date: 2026-02-08
-Generator: 06_ENGINEERING/00_TOOLS/generate_chassis.py (v5)
-Output: 04_ASSETS/cad/HM-AST-006_nomad_t_chassis.step
+Generator: 06_ENGINEERING/00_TOOLS/generate_chassis.py (v6)
+Parts: 06_ENGINEERING/00_TOOLS/generate_parts.py
+Output: 04_ASSETS/cad/
 Linked: HM-CAT-001, HM-CAT-010, HM-CAT-012, HM-CAT-013, HM-CAT-014, HM-CAT-015
 ---
 
 # CAD Assembly Manifest — Nomad-T Phase 1
 
 > [!NOTE]
-> **This document lives alongside the STEP file** and serves as its table of contents, traceability map, and regeneration guide. If the STEP looks wrong, check here first.
+> **This document lives alongside the STEP files** and serves as their table of contents, traceability map, and regeneration guide.
 
 ## 1. Quick Start
 
-### View the Model
-Drag `HM-AST-006_nomad_t_chassis.step` into any of these:
+### View Any Model
+Drag any `.step` file into:
 - **[3dviewer.net](https://3dviewer.net)** — Zero install, browser-based
 - **FreeCAD** — `File → Import → STEP`
-- **Fusion 360** — `Insert → Insert Mesh / Upload`
+- **Fusion 360** — `Insert → Upload`
 - **SolidWorks** — `File → Open → STEP`
 
-### Regenerate the Model
+### Regenerate
 ```bash
-cd <project-root>
+# Full assembly (59 parts)
 python3 06_ENGINEERING/00_TOOLS/generate_chassis.py
+
+# Individual manufacturing parts
+python3 06_ENGINEERING/00_TOOLS/generate_parts.py
 ```
 **Requires:** Python 3.12 + CadQuery (`~/.local/lib/python3.12/site-packages/cadquery`)
 
 ---
 
-## 2. Assembly Parts Map
+## 2. File Inventory
 
-Every named part in the STEP file is listed below with its source spec.
+| File | Size | Description |
+|:---|:---|:---|
+| `HM-AST-006_nomad_t_chassis.step` | 393 KB | Full robot assembly (59 named parts) |
+| `parts/NMT-MP-001_motor_plate.step` | 146 KB | Motor plate — **send to waterjet/laser shop** |
+| `parts/NMT-TD-001_thermal_deck.step` | 173 KB | Thermal deck plate — CNC or waterjet |
+| `parts/NMT-FR-001_frame_assembly.step` | 73 KB | Frame rails + crossbeams — cut-list verification |
+
+---
+
+## 3. Assembly Parts Map (59 Parts)
 
 ### Structure (HM-CAT-013)
-| STEP Name | Description | Spec |
-|:---|:---|:---|
-| `rail_L`, `rail_R` | 2040 V-Slot side rails, 700mm | §1 |
-| `xbeam_1` – `xbeam_4` | 2040 crossbeams, 240mm | §5 |
-| `shear_L`, `shear_R` | 3mm DiBond side panels, 700×120mm | §2 |
+| STEP Name | Description |
+|:---|:---|
+| `rail_L`, `rail_R` | 700mm 2040 V-Slot side rails |
+| `xbeam_1` – `xbeam_4` | 240mm 2040 crossbeams |
+| `shear_L`, `shear_R` | 3mm DiBond side panels (700×120mm) |
 
 ### Drivetrain (HM-CAT-010 / HM-CAT-015)
-| STEP Name | Description | Spec |
-|:---|:---|:---|
-| `g30_hub_FL/FR/RL/RR` | Ninebot G30 hub motors + 10" tires | HM-CAT-010 §1–2 |
-| `motor_plate_FL/FR/RL/RR` | NMT-MP-001 custom 6mm Al plates | HM-CAT-015 |
+| STEP Name | Description |
+|:---|:---|
+| `g30_hub_FL/FR/RL/RR_tire` | 250mm 10" pneumatic tires |
+| `g30_hub_FL/FR/RL/RR_motor` | 140mm motor body (inside tire) |
+| `g30_hub_FL/FR/RL/RR_axle` | 12mm Double-D axle stub |
+| `motor_plate_FL/FR/RL/RR` | NMT-MP-001 6mm Al plates with axle bore |
 
-### Electronics Enclosure (HM-CAT-012)
-| STEP Name | Description | Spec |
-|:---|:---|:---|
-| `apache_3800` | Apache 3800 protective case | §1 |
-| `thermal_deck` | 6mm Al unified thermal plate (lid replacement) | §3 / CDR-4 |
-| `bobbin_FL/FR/RL/RR` | M5 vibration isolation bobbins (Shore 40A) | §1 |
-| `battery_10s3p` | 10S3P Li-Ion pack, 36V | §2 |
-
-### Power & Control (HM-CAT-014)
-| STEP Name | Description | Spec |
-|:---|:---|:---|
-| `vesc_FL/FR/RL/RR` | 4× Flipsky 75100 motor controllers | §3 |
-| `brake_resistor` | 200W 8Ω regenerative brake resistor | §3 / CDR-5 |
-| `dcdc_meanwell` | Mean Well DDR-60L-15 (36V → 17V) | §2 |
-| `arduino_nano` | Watchdog heartbeat monitor | §3 |
+### Electronics (HM-CAT-012 / HM-CAT-014)
+| STEP Name | Description |
+|:---|:---|
+| `apache_3800` + `case_handle` | Protective case + handle |
+| `thermal_deck` | 6mm Al unified thermal plate |
+| `bobbin_FL/FR/RL/RR` | M5 vibration isolation bobbins |
+| `battery_10s3p` + `battery_xt90` | 36V pack + XT90-S connector |
+| `vesc_FL/FR/RL/RR` | Flipsky 75100 motor controllers |
+| `brake_resistor` | 200W 8Ω regen brake |
+| `dcdc_meanwell` | DDR-60L-15 (36V→17V) |
+| `arduino_nano` | Watchdog heartbeat monitor |
+| `distribution_bus` | Power distribution block |
+| `main_contactor` | HV switching contactor |
 
 ### Sensors
-| STEP Name | Description | Spec |
-|:---|:---|:---|
-| `rplidar_c1` + `lidar_mast` | RPLiDAR C1, mast-mounted >300mm | HM-CAT-006 |
-| `oakd_lite` | OAK-D Lite depth camera, -15° tilt | HM-CAT-003 |
-| `ir_FL/FR/FC/RC` | 4× Sharp IR range finders | HM-CAT-005 |
-| `imu_wt901` | WitMotion WT901SDCL 9-axis AHRS | HM-CAT-008 |
+| STEP Name | Description |
+|:---|:---|
+| `rplidar_c1` + `lidar_mast` | RPLiDAR C1 on mast (>300mm) |
+| `oakd_lite` + 3× `oakd_lens_*` | OAK-D Lite with lens bumps |
+| `ir_FL/FR/FC/RC` | Sharp IR range finders |
+| `imu_wt901` | WitMotion WT901SDCL 9-axis AHRS |
+
+### Safety & UI (CDR-6, CDR-12)
+| STEP Name | Description |
+|:---|:---|
+| `estop_button` | Red mushroom E-Stop (rear) |
+| `led_green/yellow/red` | Status LEDs (rear panel) |
+| `charge_port` | Weipu SP17 charging connector |
 
 ---
 
-## 3. Coordinate System
+## 4. Individual Parts Detail
 
-| Axis | Direction | Reference |
-|:---|:---|:---|
-| **+X** | Forward | 0 = rear axle center |
-| **+Y** | Left | 0 = centerline |
-| **+Z** | Up | 0 = ground plane |
+### NMT-MP-001 Motor Plate (146 KB)
+**The linchpin of the design.** Manufacturing-ready with:
+- Double-D axle slot (12mm OD, 10mm flats)
+- 6× M5 clearance holes (4 primary + 2 edge)
+- 2mm chamfered edges
+- Material: 6061-T6, 6mm thick
+- **Process:** Waterjet or laser cut
 
----
-
-## 4. Key Dimensions (Quick Reference)
-
-| Parameter | Value | Source |
-|:---|:---|:---|
-| Frame Length | 700mm | HM-CAT-013 §1 |
-| Frame Width | 320mm (outer-to-outer) | HM-CAT-013 §1 |
-| Wheelbase | 700mm | HM-CAT-010 |
-| Track Width | 450mm (center-to-center) | Layout |
-| Wheel OD | 250mm (10" pneumatic) | HM-CAT-010 §2 |
-| Ground Clearance | ~125mm (under rails) | HM-CAT-012 §5 |
-| Total Mass | ~18.8 kg | HM-CAT-012 §6 |
+### NMT-TD-001 Thermal Deck (173 KB)
+- 4× corner M5 mounting holes
+- 16× M3.5 VESC mount holes (4 per VESC × 4 VESCs)
+- 4× M3 Odroid standoff holes
+- 4× M3 copper pedestal contact holes
+- 2× 16mm wire gland pass-through holes
+- 1.5mm filleted top edges
+- **Process:** CNC or waterjet
 
 ---
 
-## 5. Version History
+## 5. Coordinate System & Key Dimensions
+
+| Axis | Direction | | Parameter | Value |
+|:---|:---|:---|:---|:---|
+| **+X** | Forward | | Frame | 700 × 320mm |
+| **+Y** | Left | | Wheelbase | 700mm |
+| **+Z** | Up | | Track | 450mm |
+| Origin | Rear axle, ground | | Wheel OD | 250mm |
+
+---
+
+## 6. Wiring Diagram
+
+See [HM-DWG-002_wiring_visual.png](file:///home/bdavidriggins/Documents/Nomad-T/06_ENGINEERING/01_SCHEMATICS/HM-DWG-002_wiring_visual.png) for color-coded wiring diagram, and [HM-DWG-001](file:///home/bdavidriggins/Documents/Nomad-T/06_ENGINEERING/01_SCHEMATICS/HM-DWG-001_wiring_harness.md) for pin-to-pin netlist.
+
+For formal, editable schematics with DRC: use **[KiCad](https://www.kicad.org/)** (free, open-source EDA).
+
+---
+
+## 7. Version History
 
 | Version | Date | Changes |
 |:---|:---|:---|
-| **v5** | 2026-02-08 | Phase 1 approved design: rigid frame, 4× G30 direct drive, Apache 3800, WT901 IMU |
-| v4 | 2026-02-07 | *Obsolete:* Trailing arm suspension, Arrma diffs, belt drive, Apache 2800 |
-
----
-
-## 6. What This Model Does NOT Include
-
-These are intentionally omitted from the parametric model:
-
-- **Wiring harness** — See [HM-DWG-001](file:///home/bdavidriggins/Documents/Nomad-T/06_ENGINEERING/01_SCHEMATICS/HM-DWG-001_wiring_harness.md)
-- **Fasteners** (bolts, T-nuts, brackets) — See [HM-OPS-001 Build Manual](file:///home/bdavidriggins/Documents/Nomad-T/03_OPERATIONS/HM-OPS-001_build_manual.md)
-- **Internal PCB layouts** — VESC/Odroid are bounding boxes only
-- **Tire tread pattern** — Simplified cylinder geometry
+| **v6** | 2026-02-08 | 59-part assembly, individual part files, wiring diagram |
+| v5 | 2026-02-08 | 33-part assembly, first correct design |
+| v4 | 2026-02-07 | *Obsolete:* suspension, diffs, belt drive |
