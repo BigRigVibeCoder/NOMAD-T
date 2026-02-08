@@ -22,6 +22,9 @@ The project structure determines the *type* of information stored.
     *   Binary assets, Images, CAD files, Drawings.
 *   **05_RESEARCH (Explanation)**
     *   Whitepapers, Trade Studies, Analysis, and theoretical groundwork.
+*   **06_ENGINEERING (Source)**
+    *   Technical source files, Schematics, Firmware, and Python tools.
+    *   *Example:* Wiring Diagrams (HM-DWG), Source Code (HM-SRC).
 
 ## 3. Identification System (HM-ID-XXX)
 All documentation files must have a unique identifier in their filename to ensure traceability despite refactors.
@@ -33,6 +36,8 @@ All documentation files must have a unique identifier in their filename to ensur
 *   **CAT:** Catalog (Specs, Parts)
 *   **OPS:** Operations (Guides, Manuals)
 *   **RES:** Research (Theory, Analysis)
+*   **DWG:** Drawing (Schematics, Diagrams)
+*   **SRC:** Source Code (Firmware, Software)
 *   **AST:** Asset (Images, Models) - *Mandatory for release candidates*
 
 ### Sequence

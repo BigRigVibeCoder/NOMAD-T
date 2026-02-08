@@ -1,49 +1,84 @@
-# Nomad-T / Badger-M Shopping List
+---
+ID: HM-CAT-002
+Status: ACTIVE
+Role: Master Shopping List (Phase 1)
+Date: 2026-02-07
+Linked: HM-CAT-001, HM-CAT-012, HM-CAT-014
+---
 
-## goBILDA Orders via [gobilda.com](https://www.gobilda.com)
+# Nomad-T Phase 1 Shopping List
 
-| SKU | Name | Qty | Unit Price (Est) | Total (Est) |
+> [!NOTE]
+> **VERIFIED BOM.** This list aligns with the "Rigid 2040 + G30 Hub Motor" architecture. Costs are estimates.
+
+## 1. Drivetrain & Structure (The "Physical" Bot)
+
+> [!TIP]
+> **Sourcing Rule:** AliExpress is fine for all structural/hardware parts. Only the G30 motors require OEM sourcing (CDR-1 "Golden Unit" rule).
+
+| Item | Spec | Qty | Est. Cost | Source |
 | :--- | :--- | :--- | :--- | :--- |
-| **1120-0001-0432** | 1120 Series U-Channel (17 Hole, 432mm) | 2 | $21.99 | $43.98 |
-| **1120-0001-0288** | 1120 Series U-Channel (11 Hole, 288mm) | 4 | $15.99 | $63.96 |
-| **1134-0004-0001** | 1134 Series Inside Corner Connector (4 Pack) | 2 | $9.99 | $19.98 |
-| **2100-0014-0100** | 14mm Stainless Steel Shaft (100mm Length) | 4 | $7.99 | $31.96 |
-| **1611-0005-0014** | 14mm Bore Flanged Ball Bearing (2 Pack) | 4 | $9.99 | $39.96 |
-| **1310-0014-0002** | 1310 Series HyperHub (14mm Bore) | 4 | $9.99 | $39.96 |
-| **3220-0001-0001** | 3220 Series Clamping Motor Mount (60mm Spacing) | 4 | $14.99 | $59.96 |
-| **3400-0014-0060** | 3400 Series 5M HTD Pulley (60 Tooth, 14mm Bore) | 4 | $19.99 | $79.96 |
-| **1111-0001-0062** | 1111 Series Flat Pattern Bracket (1-2 Pattern) | 4 | $4.99 | $19.96 |
-| **1200-0001-0002** | 1200 Series Pattern Spacer (2mm) | 2 | $3.99 | $7.98 |
+| **Hub Motors** | Ninebot Max G30 (Gen 2) **Rear** | 4 | $240 ($60 ea) | eBay / MSP (OEM Only) |
+| **Frame Rails** | 2040 V-Slot Extrusion (700mm) | 2 | $12 | AliExpress |
+| **Crossbeams** | 2040 V-Slot Extrusion (1000mm stick, cut to 240mm) | 1 | $6 | AliExpress |
+| **Chassis Main Case** | Apache 3800 (Black) | 1 | $40 | Harbor Freight |
+| **Shear Panels** | 3mm DiBond / ACP Sheet (12" x 24") | 2 | $20 | AliExpress / Amazon |
+| **Vibration Mounts** | M5 Rubber Bobbin (Shore 40A) | 4 | $5 | AliExpress |
+| **Motor Plates** | 6mm Aluminum (Laser/Waterjet Svc) | 4 | $50 | SendCutSend |
 
-**Estimated goBILDA Total: ~$410.00**
+**Subtotal: ~$373**
+
+## 2. Power System (36V)
+
+| Item | Spec | Qty | Est. Cost | Source |
+| :--- | :--- | :--- | :--- | :--- |
+| **Battery** | 36V 10S3P (or 10S4P) Li-Ion | 1 | $120 | Battery Hookup / M365 |
+| **Main Fuse** | 60A MIDI Fuse + Holder | 1 | $10 | Amazon / Auto |
+| **Connectors** | XT90-S (Anti-Spark) Pair | 2 | $8 | Amazon |
+| **DC-DC Converter** | Mean Well DDR-60L-15 | 1 | $35 | DigiKey / Mouser |
+| **Wire** | 10 AWG Silicone (Red/Black) | 10ft | $15 | Amazon |
+
+**Subtotal: ~$188**
+
+## 3. Control & Safety
+
+| Item | Spec | Qty | Est. Cost | Source |
+| :--- | :--- | :--- | :--- | :--- |
+| **VESC** | Flipsky 75100 (Aluminum PCB) | 4 | $260 ($65 ea) | Flipsky / Amazon |
+| **E-Stop** | N.C. Mushroom Button | 1 | $10 | Amazon |
+| **Relay Module** | 5V Relay (for Watchdog) | 1 | $5 | Amazon |
+| **Contactor** | 12V Coil / 100A DC | 1 | $25 | Amazon / Auto |
+| **Brake Resistor** | 200W 8Ω Chassis Mount | 1 | $15 | Amazon |
+
+**Subtotal: ~$315**
+
+## 4. Compute & Sensors (The "Brains")
+
+| Item | Spec | Qty | Est. Cost | Source |
+| :--- | :--- | :--- | :--- | :--- |
+| **SBC** | Odroid H4 Ultra | 1 | $239 | Ameridroid |
+| **RAM** | 16GB DDR5 SO-DIMM | 1 | $45 | Amazon |
+| **SSD** | 256GB NVMe M.2 | 1 | $30 | Amazon |
+| **LiDAR** | RPLiDAR C1 | 1 | $150 | RobotShop |
+| **Camera** | OAK-D Lite | 1 | $150 | Luxonis |
+| **Interface** | USB-CAN Adapter (TouCAN/Poly) | 1 | $30 | Amazon |
+
+**Subtotal: ~$644**
+
+## 5. Hardware & Misc
+
+| Item | Spec | Qty | Est. Cost | Source |
+| :--- | :--- | :--- | :--- | :--- |
+| **M5 Screws** | M5x10, M5x15, M5x40 (Box) | 1 | $6 | AliExpress |
+| **T-Nuts** | M5 Drop-in for 2020/2040 | 50 | $4 | AliExpress |
+| **Thermal Pad** | 100mm x 100mm (0.5mm) | 1 | $3 | AliExpress |
+| **Cable Glands** | PG7 / PG9 Assortment | 1 | $4 | AliExpress |
+| **Corner Brackets** | 2040 Interior L-Bracket | 20 | $6 | AliExpress |
+
+**Subtotal: ~$23**
 
 ---
 
-## Sourcing Strategy: "The Hybrid Supply Chain"
-**Official Generic/Clone Search Terms:** `48mm U Channel Robot`, `Gobilda Compatible`, `8mm Grid Channel` on AliExpress.
+## Grand Total: ~$1,500 USD
 
-| Component Type | Recommendation | Rationale |
-| :--- | :--- | :--- |
-| **Bearing Plates / Rails** | **Genuine goBILDA** | The 14mm holes must be exactly 14.00mm H7 tolerance for bearings. Clones often fail here (loose/tight bearings). |
-| **Crossbeams** | **AliExpress / Clone** | Structural only. Hole position tolerance is loose enough for M4 screws. Save ~50%. |
-| **Shafts** | **Genuine / McMaster** | "Chinesium" shafts are often undersized (13.9mm) causing wheel wobble. |
-
----
-
-## Flipsky / AliExpress Orders (Motors & ESCs)
-
-| Item | Specifications | Qty | Notes |
-| :--- | :--- | :--- | :--- |
-| **Motor** | 6384 190KV Brushless Outrunner | 4 | 8mm Shaft, 63mm Diameter |
-| **ESC** | Flipsky 75100 or Dual 6.7 | 2 | Must support FOC |
-
----
-
-## Amazon / Misc Orders
-
-| Item | Specifications | Qty | Notes |
-| :--- | :--- | :--- | :--- |
-| **Belts** | HTD 5M 9mm Width (Length TBD based on final layout) | 4 | Buy assortment or measure after frame assembly |
-| **Motor Pulley** | HTD 5M 15T (8mm Bore) | 4 | For 6384 Motor Shaft |
-| **Wheels** | 10" Pneumatic Hand Truck Tires | 4 | Requires custom drilling to fit HyperHub |
-| **Battery** | 6S 16Ah LiPo (Tattu/Gens Ace) | 2 | |
+*Note: AliExpress sourcing saves ~$100 vs domestic. Budget includes shipping buffer. Well under $2,000 target.*

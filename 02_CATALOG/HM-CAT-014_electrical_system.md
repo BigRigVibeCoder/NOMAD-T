@@ -1,134 +1,63 @@
 ---
 ID: HM-CAT-014
 Status: ACTIVE
-Role: Electrical System Design
-Linked: HM-CAT-012 (Integration), HM-CAT-010 (Drivetrain)
+Role: Electrical System Specification
+Date: 2026-02-07
+Linked: HM-DWG-001 (Schematic)
 ---
 
-# Electrical System Design
+# Electrical System Specification
 
-## 1. Power Architecture
+> [!CAUTION]
+> **Safety Critical.** Follow HM-DWG-001 Schematic exactly.
 
-Star topology from central PDB. CAN bus daisy-chain for motor control.
+## 1. High Voltage (HV) Bus
 
-```
-BATT1 ──┐              ┌── VESC #1 (Rear) ── Motor #1
-         ├── PDB ──────┤
-BATT2 ──┘   │          └── VESC #2 (Front) ── Motor #2
-             │
-             └── DC-DC ─┬── 12V → Odroid, Fan
-                        └── 5V  → RPLiDAR, OAK-D, IR×4, IMU
-```
+*   **Nominal Voltage:** 36V DC
+*   **Chemistry:** Li-Ion (10S)
+*   **Max Voltage:** 42.0V
+*   **Min Voltage:** 30.0V (Cutoff)
+*   **Main Fuse:** 60A MIDI Fuse (Bolt-down, >58V Rated)
+*   **Connector:** XT90-S Anti-Spark
 
-### PDB Components (inside Apache 2800)
+## 2. Low Voltage / Logic
 
-| Component | Spec | Purpose |
-|:---|:---|:---|
-| 150A ANL fuse | 150A | Main overcurrent protection |
-| 100A contactor | 12V coil, N.C. | E-Stop relay |
-| XT90 inputs ×2 | 90A rated | Battery connections |
-| XT60 outputs ×2 | 60A rated | VESC feeds |
-| Terminal blocks | 30A | DC-DC, accessories |
+*   **Source:** Mean Well DDR-60L-15 DC-DC Converter
+*   **Input:** 18-75V DC
+*   **Output:** 15V (Trimmed to **17V** per CDR-8)
+*   **Capacity:** 60W (4A)
+*   **Loads:**
+    *   Odroid H4 Ultra (17V)
+    *   USB Peripherals (5V via Odroid)
+    *   Arduino Nano (5V via USB)
 
----
+## 3. Safety Systems (CDR-6)
 
-## 2. Wire Gauge Table
+*   **Emergency Stop:**
+    *   Physical mushroom button (NC).
+    *   Breaks the **coil circuit** of the main contactor.
+    *   Does NOT switch high current directly.
+*   **Watchdog:**
+    *   Arduino Nano monitors heartbeat from ROS.
+    *   If lost, kills relay -> kills contactor.
+*   **Braking:**
+    *   200W 8Ω Brake Resistor on HV Bus.
+    *   Triggered by VESC over-voltage protection (CDR-5).
 
-| Circuit | V | Max A | Gauge | Color | Length |
-|:---|:---|:---|:---|:---|:---|
-| Battery → PDB | 22.2 | 200 | 8 AWG | Red/Black | 300mm |
-| PDB → VESC (×2) | 22.2 | 100 | 10 AWG | Red/Black | 400–500mm |
-| VESC → Motor (×2) | 22.2 | 80 | 12 AWG | Y/B/G (3 phase) | 200mm |
-| PDB → DC-DC | 22.2 | 10 | 16 AWG | Red/Black | 150mm |
-| DC-DC → Odroid | 12 | 6 | 18 AWG | Red/Black | 200mm |
-| 5V sensor bus | 5 | 2 | 22 AWG | Red/Black | Various |
-| CAN bus | Signal | — | 22 AWG twisted | Yellow/Green | Daisy |
-| E-Stop | 5 | 0.1 | 22 AWG | White | 1000mm |
+## 4. Communication
 
----
+*   **CAN Bus:**
+    *   Daisy-chain topology (CDR-7).
+    *   Shielded Twisted Pair (STP).
+    *   120Ω Terminator at last node.
+*   **USB:**
+    *   Internal USB 2.0 to Arduino.
+    *   External USB 3.0 to Sensors.
 
-## 3. Motor Phase Wiring
+## 5. Wiring Standards
 
-Each VESC → Motor connection uses 3× 12 AWG phase wires + 6-pin JST Hall sensor cable.
-
-| VESC Pin | Wire | Motor Pin |
-|:---|:---|:---|
-| Phase A | Yellow 12AWG, 6.5mm bullet | Phase A |
-| Phase B | Blue 12AWG, 6.5mm bullet | Phase B |
-| Phase C | Green 12AWG, 6.5mm bullet | Phase C |
-| Hall 5V/GND/A/B/C/Temp | 6-pin JST | Hall sensor |
-
-> [!IMPORTANT]
-> Phase wires must be equal length (±10mm). Route away from sensor wires.
-
----
-
-## 4. CAN Bus
-
-Daisy-chain: **Odroid → USB-CAN adapter → VESC #1 → VESC #2 → 120Ω terminator**
-
-| Param | Value |
-|:---|:---|
-| Baud rate | 500 kbps |
-| Cable | 22 AWG twisted pair |
-| Termination | 120Ω at end of chain |
-| Connector | JST-PH 4-pin |
-| CAN-H | Yellow |
-| CAN-L | Green |
-
----
-
-## 5. Sensor Connections to Odroid
-
-### USB Ports
-
-| Port | Device |
-|:---|:---|
-| USB 3.0 #1 | OAK-D Lite (USB-C) |
-| USB 3.0 #2 | RPLiDAR C1 |
-| USB 2.0 #3 | USB-CAN adapter (→ VESCs) |
-| USB 2.0 #4 | Arduino Nano (I/O expander) |
-
-### Arduino Nano I/O Expander
-
-| Pin | Device |
-|:---|:---|
-| I2C (SDA/SCL) | BNO085 IMU |
-| A0 | Sharp IR #1 (Front-Left) |
-| A1 | Sharp IR #2 (Front-Right) |
-| A2 | Sharp IR #3 (Front-Center) |
-| A3 | Sharp IR #4 (Rear-Center) |
-| D2 | E-Stop status (LOW = pressed) |
-
-Arduino communicates to Odroid via USB-Serial.
-
----
-
-## 6. E-Stop Circuit
-
-1. Red mushroom button (N.C., panel-mount)
-2. Controls 100A contactor coil (12V from DC-DC)
-3. Button pressed → coil de-energized → relay opens → **all power cut**
-4. Requires manual reset: release button + power cycle
-5. Arduino monitors status on D2 for software awareness
-
----
-
-## 7. Electrical BOM
-
-| Qty | Part | Cost |
-|:---|:---|:---|
-| 1 | 150A ANL fuse + holder | $8 |
-| 1 | 100A contactor (12V coil) | $25 |
-| 1 | E-Stop mushroom button | $8 |
-| 1 | DC-DC 22V→12V (10A) | $15 |
-| 1 | DC-DC 22V→5V (5A) | $10 |
-| 2 | XT90 connector pair | $6 |
-| 2 | XT60 connector pair | $4 |
-| 1 | USB-CAN adapter | $25 |
-| 1 | Arduino Nano | $12 |
-| 1 | 120Ω CAN terminator | $2 |
-| 1 | Terminal block strip | $5 |
-| 1 | Wire kit (8–22 AWG) | $30 |
-| 4 | 6.5mm bullet connectors (sets) | $8 |
-| | **Subtotal** | **~$158** |
+*   **HV (Battery -> Dist):** 10 AWG Silicone (Red/Black)
+*   **HV (Dist -> VESC):** 14 AWG Silicone
+*   **Motor Phase:** 16 AWG (or OEM Motor Wire)
+*   **Logic Power:** 18-20 AWG
+*   **Signal/CAN:** 22-24 AWG Twisted

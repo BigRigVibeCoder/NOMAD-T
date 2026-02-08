@@ -1,7 +1,8 @@
 ---
 ID: HM-CAT-009
 Status: CRITICAL PATH — Order Immediately
-Date: February 2026
+Date: 2026-02-07
+Ref: HM-CAT-016 (OEM Datasheet)
 ---
 
 # Phase 0 Procurement: The Brain Core
@@ -59,19 +60,33 @@ Date: February 2026
 
 ## 5. Case & Cooling
 
+> [!WARNING]
+> **CANCELLED:** ~~ODROID-H4 Case Type 3~~ and ~~Noctua NF-A9x14 fan~~.
+> Per RQ-5.1 and CDR-4, the Odroid is mounted **inverted** into the **Apache 3800** case lid via the **Unified Thermal Deck** (6mm aluminum armor plate + 15mm copper thermal pedestal). No separate computer case or dedicated fan is needed.
+
 | Field | Value |
 |:---|:---|
-| **Case** | ODROID-H4 Case Type 3 |
-| **Fan** | Noctua NF-A9x14 HS-PWM chromax.black.swap (slim 14mm) |
+| **Enclosure** | **Apache 3800** (shared with robot electronics) |
+| **Thermal** | Unified Thermal Deck (see RQ-5.1 / CDR-4) |
+| **Internal Fan** | 40mm Noctua (stirs internal air only — NOT primary cooling) |
 
 ---
 
-## 6. Power Supply (Brain Only)
+## 6. Power Supply
 
+### Bench / Lab Power
 | Field | Value |
 |:---|:---|
 | **Adapter** | Dtk 19V 4.74A 90W Laptop Charger |
 | **Tip Adapter** | 5.5x2.5mm Female → 5.5x2.1mm Male |
+
+### Field Power (CDR-8)
+| Field | Value |
+|:---|:---|
+| **Source** | Mean Well DDR-60L-15 (Trimmed to **17V**) |
+| **Input** | 36V Battery (18–75V DC Range) |
+| **Output** | 17V @ 4A (60W Max) |
+| **Connection** | DC Barrel Jack 5.5×2.1mm |
 
 ---
 
@@ -80,14 +95,13 @@ Date: February 2026
 | Vendor | Component | Spec Check | Est. Price |
 |:---|:---|:---|:---|
 | Ameridroid | Odroid H4 Ultra | Verify "Ultra" (i3-N305) | $230.00 |
-| Ameridroid | Case Type 3 | Check: "Type 3" | $15.00 |
-| Amazon | Crucial 48GB DDR5 | 48GB Single Stick | $140.00 |
-| Amazon | TEAMGROUP MP44L | PN: TM8FPK001T0C101 | ~$70–$120 |
-| Amazon | Intel AX210 Kit | Includes Antennas | $25.00 |
-| Amazon | Noctua NF-A9x14 PWM | 4-Pin PWM | $20.00 |
-| Amazon | Dtk 19V 4.74A PSU | 5.5x2.5mm Plug | $20.00 |
-| Amazon | DC Adapter Tip | 2.5mm → 2.1mm | $7.00 |
-| | | **TOTAL** | **~$530–$580** |
+| ~~Ameridroid~~ | ~~Case Type 3~~ | **CANCELLED** — Unified Thermal Deck | ~~$15.00~~ |
+| Amazon | Crucial 48GB DDR5 | CT48G56C46S5, Single Stick | $140.00 |
+| Amazon | TEAMGROUP MP44L 1TB | TM8FPK001T0C101 | ~$70–$120 |
+| Amazon | Intel AX210 Kit | Includes IPEX4 + Antennas | $25.00 |
+| ~~Amazon~~ | ~~Noctua NF-A9x14 PWM~~ | **CANCELLED** — Thermal Deck cools | ~~$20.00~~ |
+| Amazon | Dtk 19V 4.74A PSU | 5.5×2.1mm Plug (native) | $20.00 |
+| | | **TOTAL** | **~$485–$535** |
 
 ---
 

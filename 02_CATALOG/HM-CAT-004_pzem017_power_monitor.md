@@ -20,7 +20,7 @@ The robot's motors draw power in violent spikes (0A to 20A in milliseconds).
 
 - **Voltage Dividers:** Inaccurate. Only gives voltage, not current.
 
-We need a sensor that can handle **30A Continuous / 50A Peak** at 16.8V.
+We need a sensor that can handle **60A Continuous / 80A Peak** at **36V** (10S Li-Ion, 30–42V range).
 
 ## 2. The Solution: PZEM-017 (Industrial DC Meter)
 
@@ -38,11 +38,11 @@ We need a sensor that can handle **30A Continuous / 50A Peak** at 16.8V.
 
 ### 2.2 Integration Strategy
 
-1. **Shunt:** Bolt the **50A / 75mV Shunt** (or 100A) onto the "Dirty" 12V Rail.
+1. **Shunt:** Bolt the **100A / 75mV Shunt** onto the **36V HV Bus**.
 
-   - **Location:** Between the Master Fuse and the Pololu Regulator.
+   - **Location:** Between the 60A MIDI Fuse and the Distribution Bus (see HM-DWG-001).
 
-   - **Orientation:** "Load" side goes to motors.
+   - **Orientation:** "Load" side goes to contactor/VESCs.
 
 2. **Sense Wires:** Run small wires from the Shunt screws to the PZEM-017 terminals.
 
